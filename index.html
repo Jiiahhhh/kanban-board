@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Header -->
+      <div class="app-header">
+        <h1 class="app-title">📋 Kanban Board</h1>
+        <div class="add-task-form">
+          <input
+            type="text"
+            id="taskInput"
+            class="task-input"
+            placeholder="Enter new task..."
+            autocomplete="off"
+          />
+          <button id="btnAddTask" class="btn-add">+ Add Task</button>
+        </div>
+      </div>
+
+      <!-- Board -->
+      <div class="board">
+        <!-- To Do Column -->
+        <div class="column" data-column="todo">
+          <div class="column-header todo-header">
+            <span class="column-title">📝 To Do</span>
+            <span class="column-count" id="count-todo">0</span>
+          </div>
+          <div class="card-list" id="list-todo"></div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="column" data-column="inprogress">
+          <div class="column-header inprogress-header">
+            <span class="column-title">⚙️ In Progress</span>
+            <span class="column-count" id="count-inprogress">0</span>
+          </div>
+          <div class="card-list" id="list-inprogress"></div>
+        </div>
+
+        <!-- Done Column -->
+        <div class="column" data-column="done">
+          <div class="column-header done-header">
+            <span class="column-title">✅ Done</span>
+            <span class="column-count" id="count-done">0</span>
+          </div>
+          <div class="card-list" id="list-done"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
