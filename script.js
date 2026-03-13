@@ -58,3 +58,25 @@ function renderBoard() {
 }
 
 renderBoard();
+
+function addTask(text) {
+  if (text === "") {
+    alert("Please enter a task!");
+    return;
+  }
+
+  const newTask = { id: Date.now(), text: text, column: "todo" };
+  tasks.push(newTask);
+  renderBoard();
+  taskInput.value = "";
+}
+
+btnAddTask.addEventListener("click", () => {
+  addTask(taskInput.value.trim());
+});
+
+taskInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    addTask(taskInput.value.trim());
+  }
+});
