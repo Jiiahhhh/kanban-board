@@ -17,3 +17,44 @@ const counts = {
   inprogress: document.getElementById("count-inprogress"),
   done: document.getElementById("count-done"),
 };
+
+function renderBoard() {
+  lists.todo.innerHTML = "";
+  lists.inprogress.innerHTML = "";
+  lists.done.innerHTML = "";
+
+  tasks.forEach((task) => {
+    const cardHTML = `
+    <div class="card" data-id="${task.id}" data-column="${task.column}">
+      <p class="card-title">${task.text}</p>
+      <div class="card-actions">
+        <button class="btn-delete">🗑️ Delete</button>
+      </div>
+    </div>
+  `;
+
+    lists[task.column].insertAdjacentHTML("beforeend", cardHTML);
+  });
+
+  if (lists.todo.innerHTML === "") {
+    lists.todo.innerHTML = `<p class="empty-state">No tasks here</p>`;
+  }
+  if (lists.inprogress.innerHTML === "") {
+    lists.inprogress.innerHTML = `<p class="empty-state">No tasks here</p>`;
+  }
+  if (lists.done.innerHTML === "") {
+    lists.done.innerHTML = `<p class="empty-state">No tasks here</p>`;
+  }
+
+  counts.todo.textContent = tasks.filter(
+    (task) => task.column === "todo",
+  ).length;
+  counts.inprogress.textContent = tasks.filter(
+    (task) => task.column === "inprogress",
+  ).length;
+  counts.done.textContent = tasks.filter(
+    (task) => task.column === "done",
+  ).length;
+}
+
+renderBoard();
