@@ -33,6 +33,7 @@ function renderBoard() {
     <div class="card" data-id="${task.id}" data-column="${task.column}">
       <p class="card-title">${task.text}</p>
       <div class="card-actions">
+        <button class="btn-edit">✏️ Edit</button>
         <button class="btn-delete">🗑️ Delete</button>
         ${moveButtons[task.column]}
       </div>
@@ -90,6 +91,20 @@ taskInput.addEventListener("keydown", (e) => {
 
 Object.values(lists).forEach((list) => {
   list.addEventListener("click", (e) => {
+    if (e.target.classList.contains("btn-edit")) {
+      const id = Number(e.target.closest(".card").dataset.id);
+      //   const task = tasks.find((task) => task.id === id);
+      tasks = tasks.map((task) =>
+        task.id === id ? { ...task, text: newTask.trim() } : task,
+      );
+      const newTask = prompt("Edit task:", task.text);
+      if (newTask !== null && newTask.trim() !== "") {
+        task.text = newTask.trim();
+        saveTasks();
+        renderBoard();
+      }
+    }
+
     if (e.target.classList.contains("btn-delete")) {
       const id = Number(e.target.closest(".card").dataset.id);
       tasks = tasks.filter((task) => task.id !== id);

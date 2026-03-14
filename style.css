@@ -191,6 +191,23 @@ body {
   border-color: #e53e3e;
 }
 
+.btn-edit {
+  padding: 4px 10px;
+  border: 1px solid #c6f6d5;
+  border-radius: 6px;
+  background: #f0fff4;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #2f855a;
+}
+
+.btn-edit:hover {
+  background: #38a169;
+  color: white;
+  border-color: #38a169;
+}
+
 /* ============================================
    EMPTY STATE
    ============================================ */
