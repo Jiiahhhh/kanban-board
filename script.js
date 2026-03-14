@@ -1,5 +1,7 @@
 let tasks = loadTasks();
+let searchKeyword = "";
 
+const searchInput = document.getElementById("searchInput");
 const taskInput = document.getElementById("taskInput");
 const priorityInput = document.getElementById("priorityInput");
 const btnAddTask = document.getElementById("btnAddTask");
@@ -29,7 +31,13 @@ function renderBoard() {
   lists.inprogress.innerHTML = "";
   lists.done.innerHTML = "";
 
-  tasks.forEach((task) => {
+  const keyword = searchKeyword.toLowerCase();
+
+  const filteredTasks = tasks.filter((task) =>
+    task.text.toLowerCase().includes(keyword),
+  );
+
+  filteredTasks.forEach((task) => {
     const cardHTML = `
     <div class="card" data-id="${task.id}" data-column="${task.column}">
       <p class="card-title">
@@ -59,13 +67,13 @@ function renderBoard() {
     lists.done.innerHTML = `<p class="empty-state">No tasks here</p>`;
   }
 
-  counts.todo.textContent = tasks.filter(
+  counts.todo.textContent = filteredTasks.filter(
     (task) => task.column === "todo",
   ).length;
-  counts.inprogress.textContent = tasks.filter(
+  counts.inprogress.textContent = filteredTasks.filter(
     (task) => task.column === "inprogress",
   ).length;
-  counts.done.textContent = tasks.filter(
+  counts.done.textContent = filteredTasks.filter(
     (task) => task.column === "done",
   ).length;
 }
@@ -92,6 +100,8 @@ function addTask(text) {
   };
   tasks.push(newTask);
   saveTasks();
+  searchKeyword = "";
+  searchInput.value = "";
   renderBoard();
   taskInput.value = "";
   priorityInput.value = "medium";
@@ -105,6 +115,11 @@ taskInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     addTask(taskInput.value.trim());
   }
+});
+
+searchInput.addEventListener("input", (e) => {
+  searchKeyword = e.target.value;
+  renderBoard();
 });
 
 Object.values(lists).forEach((list) => {
