@@ -1,6 +1,7 @@
 let tasks = loadTasks();
 
 const taskInput = document.getElementById("taskInput");
+const priorityInput = document.getElementById("priorityInput");
 const btnAddTask = document.getElementById("btnAddTask");
 const lists = {
   todo: document.getElementById("list-todo"),
@@ -31,7 +32,12 @@ function renderBoard() {
   tasks.forEach((task) => {
     const cardHTML = `
     <div class="card" data-id="${task.id}" data-column="${task.column}">
-      <p class="card-title">${task.text}</p>
+      <p class="card-title">
+        ${task.text}
+        <span class="priority-badge priority-${task.priority || "medium"}">
+            ${task.priority || "medium"}
+        </span>
+      </p>
       <div class="card-actions">
         <button class="btn-edit">✏️ Edit</button>
         <button class="btn-delete">🗑️ Delete</button>
@@ -72,11 +78,23 @@ function addTask(text) {
     return;
   }
 
-  const newTask = { id: Date.now(), text: text, column: "todo" };
+  const validPriorities = ["low", "medium", "high"];
+  let priority = priorityInput.value;
+
+  if (!validPriorities.includes(priority)) {
+    priority = "medium";
+  }
+  const newTask = {
+    id: Date.now(),
+    text: text,
+    column: "todo",
+    priority: priority,
+  };
   tasks.push(newTask);
   saveTasks();
   renderBoard();
   taskInput.value = "";
+  priorityInput.value = "medium";
 }
 
 btnAddTask.addEventListener("click", () => {
@@ -93,13 +111,12 @@ Object.values(lists).forEach((list) => {
   list.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn-edit")) {
       const id = Number(e.target.closest(".card").dataset.id);
-      //   const task = tasks.find((task) => task.id === id);
-      tasks = tasks.map((task) =>
-        task.id === id ? { ...task, text: newTask.trim() } : task,
-      );
-      const newTask = prompt("Edit task:", task.text);
-      if (newTask !== null && newTask.trim() !== "") {
-        task.text = newTask.trim();
+      const task = tasks.find((task) => task.id === id);
+      const newText = prompt("Edit task:", task.text);
+      if (newText !== null && newText.trim() !== "") {
+        tasks = tasks.map((task) =>
+          task.id === id ? { ...task, text: newText.trim() } : task,
+        );
         saveTasks();
         renderBoard();
       }
@@ -142,8 +159,23 @@ function loadTasks() {
   return saved
     ? JSON.parse(saved)
     : [
-        { id: 1, text: "Learn event delegation", column: "todo" },
-        { id: 2, text: "Build Kanban Board", column: "inprogress" },
-        { id: 3, text: "Deploy to Github Pages", column: "done" },
+        {
+          id: 1,
+          text: "Learn event delegation",
+          column: "todo",
+          priority: "medium",
+        },
+        {
+          id: 2,
+          text: "Build Kanban Board",
+          column: "inprogress",
+          priority: "high",
+        },
+        {
+          id: 3,
+          text: "Deploy to Github Pages",
+          column: "done",
+          priority: "low",
+        },
       ];
 }
