@@ -18,6 +18,15 @@ const counts = {
   done: document.getElementById("count-done"),
 };
 
+const moveButtons = {
+  todo: `<button class="btn-move" data-direction="forward">→ In Progress</button>`,
+  inprogress: `
+    <button class="btn-move" data-direction="backward">← To Do</button>
+    <button class="btn-move" data-direction="forward">→ Done</button>
+  `,
+  done: `<button class="btn-move" data-direction="backward">← In Progress</button>`,
+};
+
 function renderBoard() {
   lists.todo.innerHTML = "";
   lists.inprogress.innerHTML = "";
@@ -29,6 +38,7 @@ function renderBoard() {
       <p class="card-title">${task.text}</p>
       <div class="card-actions">
         <button class="btn-delete">🗑️ Delete</button>
+        ${moveButtons[task.column]}
       </div>
     </div>
   `;
@@ -79,4 +89,32 @@ taskInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     addTask(taskInput.value.trim());
   }
+});
+
+Object.values(lists).forEach((list) => {
+  list.addEventListener("click", (e) => {
+    if (e.target.classList.contains("btn-delete")) {
+      const id = Number(e.target.closest(".card").dataset.id);
+      tasks = tasks.filter((task) => task.id !== id);
+      renderBoard();
+    }
+
+    if (e.target.classList.contains("btn-move")) {
+      const id = Number(e.target.closest(".card").dataset.id);
+      const currentColumn = e.target.closest(".card").dataset.column;
+      const direction = e.target.dataset.direction;
+
+      const columnOrder = ["todo", "inprogress", "done"];
+      const currentIndex = columnOrder.indexOf(currentColumn);
+
+      const newIndex =
+        direction === "forward" ? currentIndex + 1 : currentIndex - 1;
+      const newColumn = columnOrder[newIndex];
+
+      tasks = tasks.map((task) =>
+        task.id === id ? { ...task, column: newColumn } : task,
+      );
+      renderBoard();
+    }
+  });
 });
