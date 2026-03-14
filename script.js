@@ -1,8 +1,4 @@
-let tasks = [
-  { id: 1, text: "Learn event delegation", column: "todo" },
-  { id: 2, text: "Build Kanban Board", column: "inprogress" },
-  { id: 3, text: "Deploy to Github Pages", column: "done" },
-];
+let tasks = loadTasks();
 
 const taskInput = document.getElementById("taskInput");
 const btnAddTask = document.getElementById("btnAddTask");
@@ -77,6 +73,7 @@ function addTask(text) {
 
   const newTask = { id: Date.now(), text: text, column: "todo" };
   tasks.push(newTask);
+  saveTasks();
   renderBoard();
   taskInput.value = "";
 }
@@ -96,6 +93,7 @@ Object.values(lists).forEach((list) => {
     if (e.target.classList.contains("btn-delete")) {
       const id = Number(e.target.closest(".card").dataset.id);
       tasks = tasks.filter((task) => task.id !== id);
+      saveTasks();
       renderBoard();
     }
 
@@ -114,7 +112,23 @@ Object.values(lists).forEach((list) => {
       tasks = tasks.map((task) =>
         task.id === id ? { ...task, column: newColumn } : task,
       );
+      saveTasks();
       renderBoard();
     }
   });
 });
+
+function saveTasks() {
+  localStorage.setItem("kanban-tasks", JSON.stringify(tasks));
+}
+
+function loadTasks() {
+  const saved = localStorage.getItem("kanban-tasks");
+  return saved
+    ? JSON.parse(saved)
+    : [
+        { id: 1, text: "Learn event delegation", column: "todo" },
+        { id: 2, text: "Build Kanban Board", column: "inprogress" },
+        { id: 3, text: "Deploy to Github Pages", column: "done" },
+      ];
+}
